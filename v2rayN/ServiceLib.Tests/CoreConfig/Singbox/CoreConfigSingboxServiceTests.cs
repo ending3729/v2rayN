@@ -752,7 +752,6 @@ public class CoreConfigSingboxServiceTests
         }
     }
 
-
     [Test]
     public async Task GenerateClientConfigContent_CustomOutbound_ShouldReplaceWithUserCustomOutboundJson()
     {
