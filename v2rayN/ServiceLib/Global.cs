@@ -501,6 +501,8 @@ public class Global
 
     public static readonly List<string> DomainRemoteDNSAddress =
     [
+        // PattN: the default Remote DNS; an IP address needs no lookup of the DoH server's name
+        "https://8.8.8.8/dns-query",
         "https://dns.google/dns-query",
         "https://cloudflare-dns.com/dns-query",
         "https://cloudflare-dns.com/dns-query,https://dns.google/dns-query,8.8.8.8",
