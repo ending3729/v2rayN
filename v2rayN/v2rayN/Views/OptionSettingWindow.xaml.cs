@@ -88,6 +88,7 @@ public partial class OptionSettingWindow
             this.Bind(ViewModel, vm => vm.HyDownMbps, v => v.txtDownMbps.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.EnableFragment, v => v.togenableFragment.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.EnableFinalFragment, v => v.togenableFinalFragment.IsChecked).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.EnableSubSniBlockBypass, v => v.togenableSubSniBlockBypass.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.FragmentPackets, v => v.cmbFragmentPackets.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.FragmentLengths, v => v.txtFragmentLengths.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.FragmentDelays, v => v.txtFragmentDelays.Text).DisposeWith(disposables);

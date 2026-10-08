@@ -918,6 +918,12 @@
   <data name="TipOverridePort" xml:space="preserve">
     <value>留空則保留訂閱中的連接埠</value>
   </data>
+  <data name="LvSniBlockBypass" xml:space="preserve">
+    <value>SNI 阻斷繞過</value>
+  </data>
+  <data name="TipSniBlockBypass" xml:space="preserve">
+    <value>SNI 阻斷繞過：留空跟隨全域設定，True 強制啟用，False 強制禁用</value>
+  </data>
   <data name="TbDisplayLog" xml:space="preserve">
     <value>顯示日誌</value>
   </data>
@@ -1839,6 +1845,12 @@
   </data>
   <data name="TbEnableFinalFragmentTip" xml:space="preserve">
     <value>將封包末端拆分為更小的片段進行傳送，可能會影響吞吐量與延遲</value>
+  </data>
+  <data name="TbEnableSubSniBlockBypass" xml:space="preserve">
+    <value>啟用訂閱 SNI 阻斷繞過</value>
+  </data>
+  <data name="TbEnableSubSniBlockBypassTip" xml:space="preserve">
+    <value>匯入或更新訂閱設定時自動套用 unsafe TLS 指紋、分片 finalmask 和規避加密套件</value>
   </data>
   <data name="TbEnabletDnsViaProxy" xml:space="preserve">
     <value>DNS 透過 Bridge</value>

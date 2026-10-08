@@ -1709,7 +1709,7 @@ public static class ConfigHandler
             }
             profileItem.Subid = subid;
             profileItem.IsSub = isSub;
-            ApplySubOverrides(profileItem, subItem);
+            ApplySubOverrides(profileItem, subItem, config);
 
             var addStatus = profileItem.ConfigType switch
             {
@@ -1975,7 +1975,7 @@ public static class ConfigHandler
             {
                 ssItem.Subid = subid;
                 ssItem.IsSub = isSub;
-                ApplySubOverrides(ssItem, subItem);
+                ApplySubOverrides(ssItem, subItem, config);
                 if (await AddShadowsocksServer(config, ssItem) == 0)
                 {
                     counter++;
@@ -2008,7 +2008,7 @@ public static class ConfigHandler
             {
                 item.Subid = subid;
                 item.IsSub = isSub;
-                ApplySubOverrides(item, subItem);
+                ApplySubOverrides(item, subItem, config);
                 if (await AddWireguardServer(config, item) == 0)
                 {
                     counter++;
@@ -2039,7 +2039,7 @@ public static class ConfigHandler
                 profileItem.IsSub = isSub;
                 if (!profileItem.ConfigType.IsComplexType())
                 {
-                    ApplySubOverrides(profileItem, subItem);
+                    ApplySubOverrides(profileItem, subItem, config);
                 }
 
                 var addStatus = profileItem.ConfigType switch
@@ -2091,23 +2091,136 @@ public static class ConfigHandler
     /// <summary>
     /// Replace the address and/or port of a profile imported from a subscription with the
     /// override values configured on that subscription. Empty override values leave the profile unchanged.
+    /// Also applies SNI-block bypass evasion settings when enabled globally or for the subscription.
     /// </summary>
     /// <param name="profileItem">Profile imported from the subscription</param>
     /// <param name="subItem">Subscription the profile belongs to, or null</param>
-    public static void ApplySubOverrides(ProfileItem profileItem, SubItem? subItem)
+    /// <param name="config">Current configuration, or null</param>
+    public static void ApplySubOverrides(ProfileItem profileItem, SubItem? subItem, Config? config = null)
     {
-        if (subItem is null)
+        if (subItem is not null)
+        {
+            if (subItem.OverrideAddress.IsNotEmpty())
+            {
+                profileItem.Address = subItem.OverrideAddress!.Trim();
+            }
+            if (subItem.OverridePort is > 0 and <= 65535)
+            {
+                profileItem.Port = subItem.OverridePort.Value;
+            }
+        }
+
+        if (ShouldApplySniBlockBypass(subItem, config))
+        {
+            ApplySniBlockBypass(profileItem, config);
+        }
+    }
+
+    /// <summary>
+    /// Checks whether SNI-block bypass should be applied:
+    /// SubItem.SniBlockBypass takes precedence if explicitly set (true or false);
+    /// otherwise falls back to the global CoreBasicItem.EnableSubSniBlockBypass.
+    /// </summary>
+    public static bool ShouldApplySniBlockBypass(SubItem? subItem, Config? config)
+    {
+        if (subItem?.SniBlockBypass is bool subOverride)
+        {
+            return subOverride;
+        }
+        return config?.CoreBasicItem.EnableSubSniBlockBypass == true;
+    }
+
+    /// <summary>
+    /// Applies SNI-block bypass evasion settings to a profile:
+    /// - Standard TLS / inherent TLS: defaults fingerprint to "unsafe" (or replaces generic "chrome"),
+    ///   populates optimized evasion cipher suites, and injects default TCP fragment finalmask.
+    /// - Reality: Xray-core strictly requires a valid browser uTLS fingerprint (rejects "unsafe").
+    ///   Preserves browser fingerprint (or defaults to configured/chrome) and injects default TCP fragment finalmask.
+    /// - Non-TLS profiles are left untouched to prevent invalid finalmask configurations.
+    /// </summary>
+    public static void ApplySniBlockBypass(ProfileItem profileItem, Config? config = null)
+    {
+        var isTls = profileItem.StreamSecurity is Global.StreamSecurity or Global.StreamSecurityReality
+            || profileItem.ConfigType is EConfigType.Trojan or EConfigType.Anytls or EConfigType.Naive or EConfigType.MASQUE;
+
+        if (!isTls)
         {
             return;
         }
-        if (subItem.OverrideAddress.IsNotEmpty())
+
+        if (profileItem.StreamSecurity == Global.StreamSecurityReality)
         {
-            profileItem.Address = subItem.OverrideAddress!.Trim();
+            if (profileItem.Fingerprint.IsNullOrEmpty())
+            {
+                profileItem.Fingerprint = config?.CoreBasicItem?.DefFingerprint.NullIfEmpty() ?? "chrome";
+            }
         }
-        if (subItem.OverridePort is > 0 and <= 65535)
+        else
         {
-            profileItem.Port = subItem.OverridePort.Value;
+            if (profileItem.Fingerprint.IsNullOrEmpty() || profileItem.Fingerprint.Equals("chrome", StringComparison.OrdinalIgnoreCase))
+            {
+                profileItem.Fingerprint = Global.FingerprintUnsafe;
+            }
+
+            if (profileItem.CipherSuites.IsNullOrEmpty())
+            {
+                profileItem.CipherSuites = Global.DefaultSniBlockBypassCipherSuites;
+            }
         }
+
+        if (profileItem.Finalmask.IsNullOrEmpty())
+        {
+            profileItem.Finalmask = BuildDefaultFragmentFinalmask(config);
+        }
+    }
+
+    /// <summary>
+    /// Generates the default TCP fragment finalmask JSON structure for SNI evasion.
+    /// Uses user's configured Fragment4RayItem settings if available, otherwise standard evasion defaults.
+    /// </summary>
+    public static string BuildDefaultFragmentFinalmask(Config? config = null)
+    {
+        var configPackets = config?.Fragment4RayItem?.Packets.NullIfEmpty() ?? "tlshello";
+        var configLengths = config?.Fragment4RayItem?.Lengths ?? [];
+        var configDelays = config?.Fragment4RayItem?.Delays ?? [];
+        var configMaxSplit = config?.Fragment4RayItem?.MaxSplit.NullIfEmpty() ?? "0";
+
+        if (configLengths.Count == 0)
+        {
+            configLengths = ["50-100"];
+        }
+        if (configDelays.Count == 0)
+        {
+            configDelays = ["10-20"];
+        }
+
+        var maxSplit = 0;
+        var parts = configMaxSplit.Split('-');
+        if (parts.Length > 0 && int.TryParse(parts[0], out var ms))
+        {
+            maxSplit = ms;
+        }
+
+        var fragmentMask = new Mask4Ray
+        {
+            type = "fragment",
+            settings = new MaskSettings4Ray
+            {
+                packets = configPackets,
+                lengths = configLengths,
+                delays = configDelays,
+                maxSplit = maxSplit,
+                length = configLengths.FirstOrDefault(),
+                delay = configDelays.FirstOrDefault(),
+            },
+        };
+
+        var finalmask = new Finalmask4Ray
+        {
+            tcp = [fragmentMask],
+        };
+
+        return JsonUtils.Serialize(finalmask, true);
     }
 
     /// <summary>
@@ -2296,6 +2409,7 @@ public static class ConfigHandler
             item.CustomCoreType = subItem.CustomCoreType;
             item.OverrideAddress = subItem.OverrideAddress;
             item.OverridePort = subItem.OverridePort;
+            item.SniBlockBypass = subItem.SniBlockBypass;
         }
 
         if (item.Id.IsNullOrEmpty())

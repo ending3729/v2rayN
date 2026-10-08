@@ -41,4 +41,6 @@ public class SubItem
     public string? OverrideAddress { get; set; }
 
     public int? OverridePort { get; set; }
+
+    public bool? SniBlockBypass { get; set; }
 }

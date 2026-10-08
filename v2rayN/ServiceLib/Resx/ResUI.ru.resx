@@ -918,6 +918,12 @@
   <data name="TipOverridePort" xml:space="preserve">
     <value>Оставьте пустым, чтобы сохранить порт из подписки</value>
   </data>
+  <data name="LvSniBlockBypass" xml:space="preserve">
+    <value>Обход блокировки SNI</value>
+  </data>
+  <data name="TipSniBlockBypass" xml:space="preserve">
+    <value>Обход блокировки SNI: пусто для глобальной настройки, True для принудительного включения, False для отключения</value>
+  </data>
   <data name="TbDisplayLog" xml:space="preserve">
     <value>Отображать журнал</value>
   </data>
@@ -1838,6 +1844,12 @@
   </data>
   <data name="TbEnableFinalFragmentTip" xml:space="preserve">
     <value>Разбивать конец пакетов на более мелкие фрагменты при отправке. Это может влиять на пропускную способность и задержку</value>
+  </data>
+  <data name="TbEnableSubSniBlockBypass" xml:space="preserve">
+    <value>Включить обход блокировки SNI для подписок</value>
+  </data>
+  <data name="TbEnableSubSniBlockBypassTip" xml:space="preserve">
+    <value>Автоматически применять отпечаток TLS unsafe, finalmask фрагментации и оптимизированные шифры при импорте или обновлении подписок</value>
   </data>
   <data name="TbEnabletDnsViaProxy" xml:space="preserve">
     <value>DNS через Bridge</value>

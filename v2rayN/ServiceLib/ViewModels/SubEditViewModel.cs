@@ -11,6 +11,9 @@ public partial class SubEditViewModel : MyReactiveObject, ICloseable
     public partial string CustomCoreType { get; set; }
 
     [Reactive]
+    public partial string SniBlockBypass { get; set; }
+
+    [Reactive]
     public partial string PrevProfile { get; set; }
 
     [Reactive]
@@ -47,6 +50,7 @@ public partial class SubEditViewModel : MyReactiveObject, ICloseable
 
         SelectedSource = subItem.Id.IsNullOrEmpty() ? subItem : JsonUtils.DeepCopy(subItem);
         CustomCoreType = SelectedSource.CustomCoreType?.ToString() ?? string.Empty;
+        SniBlockBypass = SelectedSource.SniBlockBypass?.ToString() ?? string.Empty;
         PrevProfile = SelectedSource.PrevProfile;
         NextProfile = SelectedSource.NextProfile;
     }
@@ -91,6 +95,7 @@ public partial class SubEditViewModel : MyReactiveObject, ICloseable
         }
 
         SelectedSource.CustomCoreType = Enum.TryParse<ECoreType>(CustomCoreType, out var coreType) ? coreType : null;
+        SelectedSource.SniBlockBypass = bool.TryParse(SniBlockBypass, out var sniBypass) ? sniBypass : null;
         SelectedSource.PrevProfile = PrevProfile;
         SelectedSource.NextProfile = NextProfile;
 

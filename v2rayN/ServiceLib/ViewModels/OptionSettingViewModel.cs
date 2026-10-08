@@ -31,6 +31,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
     [Reactive] public partial int? HyDownMbps { get; set; }
     [Reactive] public partial bool EnableFragment { get; set; }
     [Reactive] public partial bool EnableFinalFragment { get; set; }
+    [Reactive] public partial bool EnableSubSniBlockBypass { get; set; }
     [Reactive] public partial string FragmentPackets { get; set; }
     [Reactive] public partial string FragmentLengths { get; set; }
     [Reactive] public partial string FragmentDelays { get; set; }
@@ -165,6 +166,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
         HyDownMbps = _config.HysteriaItem.DownMbps;
         EnableFragment = _config.CoreBasicItem.EnableFragment;
         EnableFinalFragment = _config.CoreBasicItem.EnableFinalFragment;
+        EnableSubSniBlockBypass = _config.CoreBasicItem.EnableSubSniBlockBypass;
         FragmentPackets = _config.Fragment4RayItem?.Packets;
         FragmentLengths = Utils.List2String(_config.Fragment4RayItem?.Lengths);
         FragmentDelays = Utils.List2String(_config.Fragment4RayItem?.Delays);
@@ -347,6 +349,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
         _config.HysteriaItem.DownMbps = HyDownMbps ?? 0;
         _config.CoreBasicItem.EnableFragment = EnableFragment;
         _config.CoreBasicItem.EnableFinalFragment = EnableFinalFragment;
+        _config.CoreBasicItem.EnableSubSniBlockBypass = EnableSubSniBlockBypass;
         _config.Fragment4RayItem ??= new();
         _config.Fragment4RayItem.Packets = FragmentPackets;
         _config.Fragment4RayItem.Lengths = fragmentLengths;

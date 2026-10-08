@@ -915,6 +915,12 @@
   <data name="TipOverridePort" xml:space="preserve">
     <value>برای نگه داشتن پورت اشتراک خالی بگذارید</value>
   </data>
+  <data name="LvSniBlockBypass" xml:space="preserve">
+    <value>بای‌پاس مسدودسازی SNI</value>
+  </data>
+  <data name="TipSniBlockBypass" xml:space="preserve">
+    <value>بای‌پاس مسدودسازی SNI: خالی برای پیروی از تنظیمات کلی، True برای فعال‌سازی اجباری، False برای غیرفعال‌سازی</value>
+  </data>
   <data name="TbDisplayLog" xml:space="preserve">
     <value>نمایش گزارش</value>
   </data>
@@ -1808,5 +1814,11 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   </data>
   <data name="MsgEchOutboundTagConflict" xml:space="preserve">
     <value>تگ "{0}" در EchOutbound قبلاً توسط outbound دیگری استفاده شده است</value>
+  </data>
+  <data name="TbEnableSubSniBlockBypass" xml:space="preserve">
+    <value>بای‌پاس مسدودسازی SNI (سابسکرایب‌ها)</value>
+  </data>
+  <data name="TbEnableSubSniBlockBypassTip" xml:space="preserve">
+    <value>اعمال خودکار فینگرپرینت unsafe، ماسک فرگمنت Finalmask و سایفرهای بهینه‌شده هنگام دریافت یا به‌روزرسانی سابسکرایب‌ها</value>
   </data>
 </root>

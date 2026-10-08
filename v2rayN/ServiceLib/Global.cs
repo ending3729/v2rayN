@@ -432,6 +432,16 @@ public class Global
         ""
     ];
 
+    public const string FingerprintUnsafe = "unsafe";
+    public const string DefaultSniBlockBypassCipherSuites = "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256";
+
+    public static readonly List<string> SubSniBlockBypassOptions =
+    [
+        "",
+        "True",
+        "False"
+    ];
+
     public static readonly List<string> FragmentPacketsOptions =
     [
         "tlshello",

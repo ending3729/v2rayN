@@ -19,6 +19,8 @@ public class CoreBasicItem
 
     public bool EnableFinalFragment { get; set; }
 
+    public bool EnableSubSniBlockBypass { get; set; }
+
     public bool EnableCacheFile4Sbox { get; set; } = true;
 }
 

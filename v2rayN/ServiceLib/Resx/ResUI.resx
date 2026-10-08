@@ -918,6 +918,12 @@
   <data name="TipOverridePort" xml:space="preserve">
     <value>Leave empty to keep the port from the subscription</value>
   </data>
+  <data name="LvSniBlockBypass" xml:space="preserve">
+    <value>SNI-Block bypass</value>
+  </data>
+  <data name="TipSniBlockBypass" xml:space="preserve">
+    <value>SNI-Block bypass: empty for global setting, True to force enable, False to force disable</value>
+  </data>
   <data name="TbDisplayLog" xml:space="preserve">
     <value>Display Log</value>
   </data>
@@ -1838,6 +1844,12 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   </data>
   <data name="TbEnableFinalFragmentTip" xml:space="preserve">
     <value>Split the tail of packets into smaller fragments. This may affect throughput and latency.</value>
+  </data>
+  <data name="TbEnableSubSniBlockBypass" xml:space="preserve">
+    <value>Enable SNI-Block bypass for subscriptions</value>
+  </data>
+  <data name="TbEnableSubSniBlockBypassTip" xml:space="preserve">
+    <value>Automatically apply unsafe TLS fingerprint, fragment finalmask, and evasion cipher suites when importing or updating subscription profiles</value>
   </data>
   <data name="TbEnabletDnsViaProxy" xml:space="preserve">
     <value>DNS via Bridge</value>

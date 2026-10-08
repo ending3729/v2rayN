@@ -406,6 +406,25 @@
                     AcceptsReturn="True"
                     Style="{StaticResource MyOutlinedTextBox}"
                     TextWrapping="Wrap" />
+
+                <TextBlock
+                    Grid.Row="17"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin4}"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource ToolbarTextBlock}"
+                    Text="{x:Static resx:ResUI.LvSniBlockBypass}" />
+                <ComboBox
+                    x:Name="cmbSniBlockBypass"
+                    Grid.Row="17"
+                    Grid.Column="1"
+                    Width="200"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    materialDesign:HintAssist.Hint="{x:Static resx:ResUI.TipSniBlockBypass}"
+                    MaxDropDownHeight="1000"
+                    Style="{StaticResource MyOutlinedTextComboBox}"
+                    ToolTip="{x:Static resx:ResUI.TipSniBlockBypass}" />
             </Grid>
         </ScrollViewer>
     </DockPanel>
